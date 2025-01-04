@@ -1,3 +1,10 @@
-.venv
-.env
-venv
+# Fichiers/Dossiers de l'environnement virtuel
+.venv/
+.env/
+venv/
+
+# Fichiers/Dossiers Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
