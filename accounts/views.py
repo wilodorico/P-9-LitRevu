@@ -1,12 +1,14 @@
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.utils.decorators import method_decorator
 
+from accounts.decorators import user_not_authenticated
 from accounts.forms import LoginForm, SignupForm
 
 
+@method_decorator(user_not_authenticated, name="dispatch")
 class SignupView(View):
     template_name = "accounts/signup.html"
 
@@ -18,11 +20,12 @@ class SignupView(View):
         form = SignupForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponse("User created")
+            return redirect("accounts:login")
         else:
             return render(request, self.template_name, {"form": form})
 
 
+@method_decorator(user_not_authenticated, name="dispatch")
 class LoginView(View):
     template_name = "accounts/login.html"
 
@@ -40,7 +43,7 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 messages.success(request, ("Vous êtes connecté."))
-                return HttpResponse("User logged in")
+                return redirect("review:home")
             else:
                 form.add_error(None, ("Le nom d'utilisateur ou le mot de passe est incorrect."))
                 return render(request, self.template_name, {"form": form})
