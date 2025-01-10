@@ -134,7 +134,7 @@ AUTH_USER_MODEL = "accounts.User"
 
 # Redirection
 LOGIN_URL = "accounts:login"
-# LOGIN_REDIRECT_URL = ""
+LOGIN_REDIRECT_URL = "review:home"
 LOGOUT_REDIRECT_URL = "accounts:login"
 
 # Tailwind CSS configuration
