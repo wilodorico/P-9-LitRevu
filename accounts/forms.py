@@ -15,5 +15,5 @@ class SignupForm(AuthUserCreationForm):
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label="Nom d'utilisateur")
+    username = forms.CharField(max_length="100", label="Nom d'utilisateur")
     password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput)

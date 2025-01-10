@@ -131,6 +131,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "accounts.User"
 
+# Redirection
+LOGIN_URL = "accounts:login"
+# LOGIN_REDIRECT_URL = ""
+LOGOUT_REDIRECT_URL = "accounts:login"
+
 # Tailwind CSS configuration
 TAILWIND_APP_NAME = "theme"
 INTERNAL_IPS = [

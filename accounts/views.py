@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -42,7 +42,7 @@ class LoginView(View):
                 messages.success(request, ("Vous êtes connecté."))
                 return HttpResponse("User logged in")
             else:
-                messages.info(request, ("Le nom d'utilisateur ou le mot de passe est incorrect."))
+                form.add_error(None, ("Le nom d'utilisateur ou le mot de passe est incorrect."))
                 return render(request, self.template_name, {"form": form})
         else:
             return render(request, self.template_name, {"form": form})
@@ -50,4 +50,4 @@ class LoginView(View):
 
 def logout_view(request):
     logout(request)
-    return HttpResponse("User logged out")
+    return redirect("accounts:login")
