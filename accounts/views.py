@@ -1,7 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 
 from accounts.forms import LoginForm, SignupForm
 
@@ -38,6 +39,15 @@ class LoginView(View):
             )
             if user is not None:
                 login(request, user)
+                messages.success(request, ("Vous êtes connecté."))
                 return HttpResponse("User logged in")
+            else:
+                messages.info(request, ("Le nom d'utilisateur ou le mot de passe est incorrect."))
+                return render(request, self.template_name, {"form": form})
         else:
             return render(request, self.template_name, {"form": form})
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponse("User logged out")
