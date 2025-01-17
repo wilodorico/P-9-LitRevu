@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "accounts",
+    "review",
     "tailwind",
     "theme",
     "django_browser_reload",
@@ -131,6 +132,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "accounts.User"
 
+# Redirection
+LOGIN_URL = "accounts:login"
+LOGIN_REDIRECT_URL = "review:home"
+LOGOUT_REDIRECT_URL = "accounts:login"
+
 # Tailwind CSS configuration
 TAILWIND_APP_NAME = "theme"
 INTERNAL_IPS = [
@@ -138,3 +144,7 @@ INTERNAL_IPS = [
 ]
 # Fix module not found error for init tailwind
 NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
+
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = "media/"
