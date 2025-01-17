@@ -12,7 +12,7 @@ class HomeView(LoginRequiredMixin, View):
     template_name = "review/home.html"
 
     def get(self, request):
-        tickets = Ticket.objects.filter(user=request.user)
+        tickets = Ticket.objects.filter(user=request.user).order_by("-time_created")
         return render(request, self.template_name, {"tickets": tickets})
 
 
