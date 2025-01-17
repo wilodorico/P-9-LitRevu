@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-32 flex flex-col items-center">
+
+    <h1 class="text-2xl">Ticket form</h1> 
+    <form 
+        method="post" 
+        enctype="multipart/form-data"
+        class="w-full max-w-[600px]">
+        {% csrf_token %}
+        <div class="mb-5">
+            <label for="{{ form.title.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.title.label }}</label>
+            <input 
+                type="text" 
+                id="{{ form.title.id_for_label}}" 
+                name="{{ form.title.html_name }}" 
+                value="{% if form.title.value %}{{form.title.value}}{% endif %}"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+            />
+            {{ form.title.errors }}
+        </div>
+        <div class="mb-5">
+            <label for="{{ form.description.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.description.label }}</label>
+            <textarea 
+                id="{{ form.description.id_for_label}}" 
+                name="{{ form.description.html_name }}"
+                value="{% if form.description.value %}{{form.description.value}}{% endif %}"
+                rows="4" 
+                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                placeholder="Écrivez la description du ticket ici..."
+            ></textarea>
+            {{ form.description.errors }}
+        </div>
+        <div class="mb-5">
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
+            <input 
+                id="{{ form.image.id_for_label }}"
+                name="{{ form.image.html_name }}"
+                value="{% if form.image.value %}{{form.image.value}}{% endif %}" 
+                type="file"
+                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" 
+            >
+        </div>
+        <div class="mt-5 text-right">
+            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Envoyer</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

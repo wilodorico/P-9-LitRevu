@@ -5,9 +5,9 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Ticket(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    title = models.CharField(max_length=128)
-    description = models.TextField(max_length=2048, blank=True)
-    image = models.ImageField(blank=True, null=True)
+    title = models.CharField(max_length=128, verbose_name="Titre")
+    description = models.TextField(max_length=2048, verbose_name="Description", blank=True)
+    image = models.ImageField(blank=True, null=True, verbose_name="Image")
     time_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
