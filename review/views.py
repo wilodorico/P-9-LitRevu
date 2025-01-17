@@ -3,13 +3,15 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from review.forms import TicketForm
+from review.models import Ticket
 
 
 class HomeView(LoginRequiredMixin, View):
     template_name = "review/home.html"
 
     def get(self, request):
-        return render(request, self.template_name)
+        tickets = Ticket.objects.filter(user=request.user)
+        return render(request, self.template_name, {"tickets": tickets})
 
 
 class TicketCreateView(LoginRequiredMixin, View):
