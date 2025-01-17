@@ -22,6 +22,12 @@ class Ticket(models.Model):
                 old_ticket.image.delete(save=False)
         super().save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        # Suppression de l'image associée
+        if self.image:
+            self.image.delete(save=False)
+        super().delete(*args, **kwargs)
+
 
 class Review(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)

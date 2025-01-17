@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
+from django.contrib import messages
 
 from review.forms import TicketForm
 from review.models import Ticket
@@ -49,3 +50,18 @@ class TicketUpdateView(LoginRequiredMixin, View):
             photo.user = request.user
             photo.save()
             return redirect("review:home")
+
+
+@method_decorator(ticket_owner_required, name="dispatch")
+class TicketDeleteView(LoginRequiredMixin, View):
+    template_name = "review/ticket_delete_confirm.html"
+
+    def get(self, request, ticket_id):
+        ticket = get_object_or_404(Ticket, id=ticket_id)
+        return render(request, self.template_name, {"ticket": ticket})
+
+    def post(self, request, ticket_id):
+        ticket = get_object_or_404(Ticket, id=ticket_id)
+        ticket.delete()
+        messages.success(request, "Demande de critique supprimée.")
+        return redirect("review:home")
