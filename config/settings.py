@@ -144,3 +144,7 @@ INTERNAL_IPS = [
 ]
 # Fix module not found error for init tailwind
 NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
+
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = "media/"
