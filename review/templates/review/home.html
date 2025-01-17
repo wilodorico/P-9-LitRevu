@@ -15,9 +15,11 @@
                 <div class="flex justify-between mb-5">
                     <div class="flex">
                         <p class="me-5">{{ ticket.user.username }} a demandé une critique</p>
-                        <a href="#edit-demande-critique" title="Éditer">
+                        {% if ticket.user == request.user %}
+                        <a href="{% url 'review:ticket_update' ticket.id %}" title="Éditer">
                             <img src="{% static 'medias/edit.png' %}" alt="Icone édition" class="w-5 h-5">
                         </a>
+                        {% endif %}
                     </div>
                     <p class="text-xs text-gray-700">{{ ticket.time_created | date:"H:i, d F Y" }}</p>
                 </div>

@@ -24,14 +24,19 @@
             <textarea 
                 id="{{ form.description.id_for_label}}" 
                 name="{{ form.description.html_name }}"
-                value="{% if form.description.value %}{{form.description.value}}{% endif %}"
                 rows="4" 
                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                 placeholder="Écrivez la description du ticket ici..."
-            ></textarea>
+            >{% if form.instance.description %}{{form.instance.description}}{% endif %}</textarea>
             {{ form.description.errors }}
         </div>
         <div class="mb-5">
+            {% if form.instance.image %}
+            <div class="mb-5">
+                <p>Image actuelle :</p>
+                <img src="{{ form.instance.image.url }}" alt="Image du ticket" class="border border-gray-300 h-[200px] object-contain" width="150" height="400">
+            </div>
+            {% endif %}
             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
             <input 
                 id="{{ form.image.id_for_label }}"
@@ -39,7 +44,9 @@
                 value="{% if form.image.value %}{{form.image.value}}{% endif %}" 
                 type="file"
                 class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" 
-            >
+            > 
+            
+            {{ form.image.errors }}
         </div>
         <div class="mt-5 text-right">
             <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Envoyer</button>

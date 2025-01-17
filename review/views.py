@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -23,6 +23,30 @@ class TicketCreateView(LoginRequiredMixin, View):
 
     def post(self, request):
         form = TicketForm(request.POST, request.FILES)
+        if form.is_valid():
+            photo = form.save(commit=False)
+            photo.user = request.user
+            photo.save()
+            return redirect("review:home")
+
+
+class TicketUpdateView(LoginRequiredMixin, View):
+    template_name = "review/ticket_form.html"
+
+    def get(self, request, ticket_id):
+        ticket = get_object_or_404(Ticket, id=ticket_id)
+        if ticket.user != request.user:
+            return redirect("review:home")
+
+        form = TicketForm(instance=ticket)
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request, ticket_id):
+        ticket = get_object_or_404(Ticket, id=ticket_id)
+        if ticket.user != request.user:
+            return redirect("review:home")
+
+        form = TicketForm(request.POST, request.FILES, instance=ticket)
         if form.is_valid():
             photo = form.save(commit=False)
             photo.user = request.user

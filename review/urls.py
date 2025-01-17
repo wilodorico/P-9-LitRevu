@@ -7,5 +7,6 @@ app_name = "review"
 
 urlpatterns = [
     path("", views.HomeView.as_view(), name="home"),
-    path("ticket/create/", views.TicketCreateView.as_view(), name="ticket_create"),
+    path("ticket/créer/", views.TicketCreateView.as_view(), name="ticket_create"),
+    path("ticket/<int:ticket_id>/modifier/", views.TicketUpdateView.as_view(), name="ticket_update"),
 ]
