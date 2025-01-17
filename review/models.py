@@ -13,6 +13,15 @@ class Ticket(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        # Vérifie si une nouvelle image a été ajoutée
+        if self.pk:
+            old_ticket = Ticket.objects.get(pk=self.pk)
+            if old_ticket.image and old_ticket.image != self.image:
+                # Suppression de l'ancienne image
+                old_ticket.image.delete(save=False)
+        super().save(*args, **kwargs)
+
 
 class Review(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
