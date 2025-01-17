@@ -1,0 +1,1 @@
+from review.permissions.edit_access import ticket_owner_required
