@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
 {% block title %}
     | Flux
 {% endblock title %}
@@ -12,7 +14,38 @@
 
     <div class="w-full">
         {% for ticket in tickets %}
-            {% include 'review/includes/ticket_card.html' %}
+            {% if ticket.reviews.all %}
+                <div class="w-full border border-gray-300 rounded-lg shadow-sm mb-5 p-5">
+
+                    {% for review in ticket.reviews.all %}
+                        <div class="flex justify-between">
+                            <div class="flex">
+                                {% if review.user == request.user %}
+                                <p class="me-5">Vous avez publié une critique</p>
+                                <a href="#edit" title="Éditer">
+                                    <img src="{% static 'medias/edit.png' %}" alt="Icone édition" class="w-5 h-5">
+                                </a>
+                                {% else %}
+                                <p>{{ review.user }} a plublié une critique</p> 
+                                {% endif %}
+                            </div>
+                            <p class="text-xs text-gray-700">{{ ticket.time_created | date:"H:i, d F Y" }}</p>
+                        </div>
+                        <h2 class="text-xl font-semibold my-5">
+                            {{ review.headline }} - 
+                            <span class="inline-flex">
+                                {% for _ in review.rating|stars_count %}
+                                <img src="{% static 'medias/star.png' %}" alt="Étoile" class="w-5 h-5">
+                                {% endfor %}
+                            </span>
+                        </h2>
+                        <p class="text-gray-700 mb-3">{{ review.body }}</p>
+                    {% endfor %}
+                    {% include 'review/includes/ticket_card.html' %}
+                </div>
+            {% else %}
+                {% include 'review/includes/ticket_card.html' %}
+            {% endif %}
         {% endfor %}
     </div>
 </div>
