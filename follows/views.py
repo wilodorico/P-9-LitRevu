@@ -1,5 +1,5 @@
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
@@ -31,3 +31,33 @@ class UnFollowHtmxView(LoginRequiredMixin, View):
         messages.success(request, "Vous n'êtes plus abonné à cet utilisateur.")
 
         return render(request, "follows/includes/following_list.html", {"followings": followings})
+
+
+def follow_user(request):
+    followings = UserFollow.objects.filter(user=request.user)
+    username = request.POST.get("username")
+
+    if not username:
+        messages.info(request, "Veuillez saisir un nom d'utilisateur.")
+        return render(request, "follows/includes/following_list.html", {"followings": followings})
+
+    user_to_follow = get_object_or_404(User, username=username)
+
+    if UserFollow.objects.filter(user=request.user, followed_user=user_to_follow).exists():
+        messages.info(request, "Vous êtes déjà abonné à cet utilisateur.")
+        return render(request, "follows/includes/following_list.html", {"followings": followings})
+
+    if request.user != user_to_follow:
+        UserFollow.objects.get_or_create(user=request.user, followed_user=user_to_follow)
+        messages.success(request, "Vous êtes maintenant abonné à cet utilisateur.")
+
+    return render(request, "follows/includes/following_list.html", {"followings": followings})
+
+
+def search_users(request):
+    query = request.GET.get("search", "").strip()
+    if not query:
+        return HttpResponse("")
+
+    users = User.objects.filter(username__icontains=query)[:5]
+    return render(request, "follows/includes/search_results.html", {"users": users})
