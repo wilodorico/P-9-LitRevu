@@ -1,39 +1,51 @@
 {% extends "base.html" %}
 {% load static %}
+{% load custom_filters %}
 {% block title %}
     | Flux
 {% endblock title %}
 {% block content %}
-<div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 lg:py-14 flex flex-col items-center">
-    <div class="w-full max-w-[700px] mb-8 px-5">
+<div class="w-full max-w-[700px] flex flex-col items-center mt-10">
+    <div class="w-full mb-8 px-5">
         <a href="{% url 'review:ticket_create' %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
             Demander une critique
         </a>
     </div>
 
-    <div class="w-full max-w-[700px]">
+    <div class="w-full">
         {% for ticket in tickets %}
-            <div class="border border-gray-300 rounded-lg shadow-sm mb-5 p-5">
-                <div class="flex justify-between mb-5">
-                    <div class="flex">
-                        <p class="me-5">{{ ticket.user.username }} a demandé une critique</p>
-                        {% if ticket.user == request.user %}
-                        <a href="{% url 'review:ticket_update' ticket.id %}" title="Éditer">
-                            <img src="{% static 'medias/edit.png' %}" alt="Icone édition" class="w-5 h-5">
-                        </a>
-                        {% endif %}
-                    </div>
-                    <p class="text-xs text-gray-700">{{ ticket.time_created | date:"H:i, d F Y" }}</p>
+            {% if ticket.reviews.all %}
+                <div class="w-full border border-gray-300 rounded-lg shadow-sm mb-5 p-5">
+
+                    {% for review in ticket.reviews.all %}
+                        <div class="flex justify-between">
+                            <div class="flex">
+                                {% if review.user == request.user %}
+                                <p class="me-5">Vous avez publié une critique</p>
+                                <a href="#edit" title="Éditer">
+                                    <img src="{% static 'medias/edit.png' %}" alt="Icone édition" class="w-5 h-5">
+                                </a>
+                                {% else %}
+                                <p>{{ review.user }} a plublié une critique</p> 
+                                {% endif %}
+                            </div>
+                            <p class="text-xs text-gray-700">{{ ticket.time_created | date:"H:i, d F Y" }}</p>
+                        </div>
+                        <h2 class="text-xl font-semibold my-5">
+                            {{ review.headline }} - 
+                            <span class="inline-flex">
+                                {% for _ in review.rating|stars_count %}
+                                <img src="{% static 'medias/star.png' %}" alt="Étoile" class="w-5 h-5">
+                                {% endfor %}
+                            </span>
+                        </h2>
+                        <p class="text-gray-700 mb-3">{{ review.body }}</p>
+                    {% endfor %}
+                    {% include 'review/includes/ticket_card.html' %}
                 </div>
-                <h2 class="text-xl font-bold">{{ ticket.title }}</h2>
-                <p class="text-gray-700 mb-3">{{ ticket.description }}</p>
-                <div class="flex justify-between">
-                    <img src="{{ ticket.image.url }}" alt="ticket image" class="border border-gray-300 h-[200px] object-contain" width="150" height="400">
-                    <a href="#créer une critique" class="text-white h-min self-end bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                        Créer une critique
-                    </a>
-                </div>
-            </div>
+            {% else %}
+                {% include 'review/includes/ticket_card.html' %}
+            {% endif %}
         {% endfor %}
     </div>
 </div>
