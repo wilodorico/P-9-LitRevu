@@ -1,0 +1,28 @@
+{% load static %}
+{% load custom_filters %}
+<div class="w-full border border-gray-300 rounded-lg shadow-sm mb-5 p-5">
+  <div class="flex justify-between">
+      <div class="flex">
+          {% if post.user == request.user %}
+          <p class="me-5">Vous avez publié une critique</p>
+          <a href="{% url 'review:review_update' post.id %}" title="Éditer">
+              <img src="{% static 'medias/edit.png' %}" alt="Icone édition" class="w-5 h-5">
+          </a>
+          {% else %}
+          <p>{{ post.user }} a publié une critique</p>
+          {% endif %}
+      </div>
+      <p class="text-xs text-gray-700">{{ post.time_created | date:"H:i, d F Y" }}</p>
+  </div>
+  <h2 class="text-xl font-semibold my-5">
+      {{ post.headline }} -
+      <span class="inline-flex">
+          {% for _ in post.rating|stars_count %}
+          <img src="{% static 'medias/star.png' %}" alt="Étoile" class="w-5 h-5">
+          {% endfor %}
+      </span>
+  </h2>
+  <p class="text-gray-700 mb-3">{{ post.body }}</p>
+
+  {% include 'review/includes/ticket_card.html' with ticket=post.ticket %}
+</div>

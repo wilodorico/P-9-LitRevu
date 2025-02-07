@@ -5,7 +5,7 @@
     | Flux
 {% endblock title %}
 {% block content %}
-<div class="w-full max-w-[700px] flex flex-col items-center mt-10">
+<div class="w-full max-w-4xl flex flex-col items-center mt-10">
     <div class="w-full mb-8 px-5">
         <a href="{% url 'review:ticket_create' %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
             Demander une critique
@@ -14,33 +14,7 @@
     <div class="w-full">
         {% for post in posts %}
             {% if post|model_name == "review" %}
-                <div class="w-full border border-gray-300 rounded-lg shadow-sm mb-5 p-5">
-                    <div class="flex justify-between">
-                        <div class="flex">
-                            {% if post.user == request.user %}
-                            <p class="me-5">Vous avez publié une critique</p>
-                            <a href="{% url 'review:review_update' post.id %}" title="Éditer">
-                                <img src="{% static 'medias/edit.png' %}" alt="Icone édition" class="w-5 h-5">
-                            </a>
-                            {% else %}
-                            <p>{{ post.user }} a publié une critique</p>
-                            {% endif %}
-                        </div>
-                        <p class="text-xs text-gray-700">{{ post.time_created | date:"H:i, d F Y" }}</p>
-                    </div>
-                    <h2 class="text-xl font-semibold my-5">
-                        {{ post.headline }} -
-                        <span class="inline-flex">
-                            {% for _ in post.rating|stars_count %}
-                            <img src="{% static 'medias/star.png' %}" alt="Étoile" class="w-5 h-5">
-                            {% endfor %}
-                        </span>
-                    </h2>
-                    <p class="text-gray-700 mb-3">{{ post.body }}</p>
-
-                    {% include 'review/includes/ticket_card.html' with ticket=post.ticket %}
-                </div>
-
+                {% include "review/includes/review_card.html" %}
             {% elif post|model_name == "ticket" %}
                 {% include 'review/includes/ticket_card.html' with ticket=post %}
             {% endif %}
