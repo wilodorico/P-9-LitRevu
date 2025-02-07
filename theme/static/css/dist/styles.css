@@ -1438,6 +1438,10 @@ input:checked + .toggle-bg {
   margin-top: 1.25rem;
 }
 
+.ms-4 {
+  margin-inline-start: 1rem;
+}
+
 .block {
   display: block;
 }
@@ -1659,6 +1663,10 @@ input:checked + .toggle-bg {
 
 .items-center {
   align-items: center;
+}
+
+.items-baseline {
+  align-items: baseline;
 }
 
 .justify-start {

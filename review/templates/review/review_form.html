@@ -26,10 +26,15 @@
             <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.rating.label }}</p>
             <div class="flex">
                 {% for i in "012345" %}
-                    <div class="flex items-center me-4">
-                        <input id="rating-inline-radio-{{ i }}" type="radio" value="{{ i }}" name="{{ form.rating.name }}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="rating-inline-radio-{{ i }}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ i }}</label>
-                    </div>
+                    {% with i|add:"0" as i_int %} {# Convertit i en entier #}
+                        <div class="flex items-center me-4">
+                            <input id="rating-inline-radio-{{ i_int }}" type="radio" value="{{ i_int }}" 
+                                name="{{ form.rating.name }}" 
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                {% if form.rating.value == i_int %}checked{% endif %}>
+                            <label for="rating-inline-radio-{{ i_int }}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ i_int }}</label>
+                        </div>
+                    {% endwith %}
                 {% endfor %}
             </div>
             {{ form.rating.errors }}
@@ -46,6 +51,11 @@
             {{ form.body.errors }}
         </div>
         <div class="mt-5 text-right">
+            {% if form.instance.id %}
+            <a href="{% url "review:review_delete" form.instance.id %}" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+                Supprimer
+            </a>
+            {% endif %}
             <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Envoyer</button>
         </div>
     </form>

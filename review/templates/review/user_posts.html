@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>Mes Tickets et Revues</h1>
+<ul>
+    {% for post in posts %}
+        <li class="border border-gray-300 rounded-lg shadow-sm mb-5 p-5">
+            {% if post.title %}  <!-- C'est un Ticket -->
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.description }}</p>
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" width="200" height="200">
+                {% endif %}
+                <p>Créé le : {{ post.time_created }}</p>
+            {% elif post.headline %}  <!-- C'est une Review -->
+                <h3>{{ post.headline }} (Note : {{ post.rating }}/5)</h3>
+                <p>{{ post.body }}</p>
+                <p>Sur le ticket :</p>
+                <div style="border-left: 4px solid #ccc; padding-left: 10px; margin-top: 5px;">
+                    <strong>{{ post.ticket.title }}</strong>
+                    <p>{{ post.ticket.description }}</p>
+                    {% if post.ticket.image %}
+                        <img src="{{ post.ticket.image.url }}" alt="{{ post.ticket.title }}" width="200" height="200">
+                    {% endif %}
+                    <p>Créé le : {{ post.ticket.time_created }}</p>
+                </div>
+                <p>Revue publiée le : {{ post.time_created }}</p>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

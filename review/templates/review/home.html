@@ -22,7 +22,7 @@
                             <div class="flex">
                                 {% if review.user == request.user %}
                                 <p class="me-5">Vous avez publié une critique</p>
-                                <a href="#edit" title="Éditer">
+                                <a href="{% url 'review:review_update' review.id %}" title="Éditer">
                                     <img src="{% static 'medias/edit.png' %}" alt="Icone édition" class="w-5 h-5">
                                 </a>
                                 {% else %}
