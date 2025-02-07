@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.urls import reverse
+from django.db import transaction
 
 from follows.models import UserFollow
 from review.forms import ReviewForm, TicketForm
@@ -38,8 +39,8 @@ class TicketCreateView(LoginRequiredMixin, View):
     template_name = "review/ticket_form.html"
 
     def get(self, request):
-        form = TicketForm()
-        return render(request, self.template_name, {"form": form})
+        ticket_form = TicketForm()
+        return render(request, self.template_name, {"ticket_form": ticket_form})
 
     def post(self, request):
         form = TicketForm(request.POST, request.FILES)
@@ -56,8 +57,8 @@ class TicketUpdateView(LoginRequiredMixin, View):
 
     def get(self, request, ticket_id):
         ticket = get_object_or_404(Ticket, id=ticket_id)
-        form = TicketForm(instance=ticket)
-        return render(request, self.template_name, {"form": form})
+        ticket_form = TicketForm(instance=ticket)
+        return render(request, self.template_name, {"ticket_form": ticket_form})
 
     def post(self, request, ticket_id):
         ticket = get_object_or_404(Ticket, id=ticket_id)
@@ -90,8 +91,8 @@ class ReviewCreateView(LoginRequiredMixin, View):
 
     def get(self, request, ticket_id):
         ticket = get_object_or_404(Ticket, id=ticket_id)
-        form = ReviewForm()
-        return render(request, self.template_name, {"form": form, "ticket": ticket})
+        review_form = ReviewForm()
+        return render(request, self.template_name, {"review_form": review_form, "ticket": ticket})
 
     def post(self, request, ticket_id):
         ticket = get_object_or_404(Ticket, id=ticket_id)
@@ -116,8 +117,8 @@ class ReviewUpdateView(LoginRequiredMixin, View):
 
     def get(self, request, review_id):
         review = get_object_or_404(Review, id=review_id)
-        form = ReviewForm(instance=review)
-        return render(request, self.template_name, {"form": form, "ticket": review.ticket})
+        review_form = ReviewForm(instance=review)
+        return render(request, self.template_name, {"review_form": review_form, "ticket": review.ticket})
 
     def post(self, request, review_id):
         review = get_object_or_404(Review, id=review_id)
@@ -158,3 +159,30 @@ class UserPostsView(LoginRequiredMixin, View):
         sorted_posts = sorted(combined_posts, key=attrgetter("time_created"), reverse=True)
 
         return render(request, self.template_name, {"posts": sorted_posts})
+
+
+class TicketReviewCreateView(View):
+    template_name = "review/ticket_review_form.html"
+
+    def get(self, request):
+        ticket_form = TicketForm()
+        review_form = ReviewForm()
+        return render(request, self.template_name, {"ticket_form": ticket_form, "review_form": review_form})
+
+    def post(self, request):
+        ticket_form = TicketForm(request.POST, request.FILES)
+        review_form = ReviewForm(request.POST)
+        rating_input = int(request.POST.get("rating"))
+        if ticket_form.is_valid() and review_form.is_valid():
+            with transaction.atomic():
+                ticket = ticket_form.save(commit=False)
+                ticket.user = request.user
+                ticket.save()
+                review = review_form.save(commit=False)
+                review.user = request.user
+                review.ticket = ticket
+                review.rating = rating_input
+                review.save()
+                messages.success(request, "Critique publiée !")
+            return redirect("review:home")
+        return render(request, self.template_name, {"ticket_form": ticket_form, "review_form": review_form})

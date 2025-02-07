@@ -1,64 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
 <h1 class="text-xl font-semibold my-4">Créer une critique</h1>
-<div class="w-full max-w-[800px] flex flex-col items-center border-2 border-gray-300 rounded-t-lg p-4">
+<div class="w-full max-w-3xl flex flex-col items-center border-2 border-gray-300 rounded-t-lg p-4">
     <div class="w-full max-w-[700px]">
         <h2 class="text-left">En réponse à</h2>
         {% include 'review/includes/ticket_card.html' with ticket=ticket %}
     </div>
 </div>
-<section class="w-full max-w-[800px] flex flex-col items-center border-2 border-gray-300 rounded-b-lg border-t-0 p-4">
+<section class="w-full max-w-3xl flex flex-col items-center border-2 border-gray-300 rounded-b-lg border-t-0 p-4 mb-10">
     <h2 class="mb-3">Critique</h2>
     <form method="post" class="w-full">
         {% csrf_token %}
-        <div class="mb-5">
-            <label for="{{ form.headline.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.headline.label }}</label>
-            <input 
-                type="text" 
-                id="{{ form.headline.id_for_label}}" 
-                name="{{ form.headline.html_name }}" 
-                value="{% if form.headline.value %}{{form.headline.value}}{% endif %}"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-            />
-            {{ form.headline.errors }}
-        </div>
-        <div class="">
-            <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.rating.label }}</p>
-            <div class="flex">
-                {% for i in "012345" %}
-                    {% with i|add:"0" as i_int %} {# Convertit i en entier #}
-                        <div class="flex items-center me-4">
-                            <input id="rating-inline-radio-{{ i_int }}" type="radio" value="{{ i_int }}" 
-                                name="{{ form.rating.name }}" 
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                {% if form.rating.value == i_int %}checked{% endif %}>
-                            <label for="rating-inline-radio-{{ i_int }}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ i_int }}</label>
-                        </div>
-                    {% endwith %}
-                {% endfor %}
-            </div>
-            {{ form.rating.errors }}
-        </div>
-        <div class="my-5">
-            <label for="{{ form.body.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.body.label }}</label>
-            <textarea 
-                id="{{ form.body.id_for_label}}" 
-                name="{{ form.body.html_name }}"
-                rows="4"
-                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                placeholder="Écrivez la critique ici..."
-            >{% if form.instance.body %}{{form.instance.body}}{% endif %}</textarea>
-            {{ form.body.errors }}
-        </div>
+        {% include "review/includes/review_inputs.html" %}
         <div class="mt-5 text-right">
-            {% if form.instance.id %}
-            <a href="{% url "review:review_delete" form.instance.id %}" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
-                Supprimer
-            </a>
-            {% endif %}
-            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Envoyer</button>
+          {% if review_form.instance.id %}
+          <a href="{% url "review:review_delete" review_form.instance.id %}" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+              Supprimer
+          </a>
+          {% endif %}
+          <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Envoyer</button>
         </div>
     </form>
-    
 </section>
 {% endblock content %}

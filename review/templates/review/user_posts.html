@@ -3,8 +3,6 @@
 {% load custom_filters %}
 {% block content %}
 <h1 class="text-3xl my-5">Mes Tickets et Revues</h1>
-
-
     <div class="w-full max-w-4xl">
       {% for post in posts %}
           {% if post|model_name == "review" %}
