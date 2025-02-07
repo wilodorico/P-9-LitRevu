@@ -5,6 +5,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib import messages
+from django.urls import reverse
 
 from review.forms import ReviewForm, TicketForm
 from review.models import Review, Ticket
@@ -56,11 +57,12 @@ class TicketUpdateView(LoginRequiredMixin, View):
 
 @method_decorator(ticket_owner_required, name="dispatch")
 class TicketDeleteView(LoginRequiredMixin, View):
-    template_name = "review/ticket_delete_confirm.html"
+    template_name = "review/includes/delete_confirm.html"
 
     def get(self, request, ticket_id):
         ticket = get_object_or_404(Ticket, id=ticket_id)
-        return render(request, self.template_name, {"ticket": ticket})
+        cancel_url = reverse("review:ticket_update", kwargs={"ticket_id": ticket.id})
+        return render(request, self.template_name, {"object": ticket, "cancel_url": cancel_url})
 
     def post(self, request, ticket_id):
         ticket = get_object_or_404(Ticket, id=ticket_id)
@@ -118,11 +120,12 @@ class ReviewUpdateView(LoginRequiredMixin, View):
 
 @method_decorator(review_owner_required, name="dispatch")
 class ReviewDeleteView(LoginRequiredMixin, View):
-    template_name = "review/review_delete_confirm.html"
+    template_name = "review/includes/delete_confirm.html"
 
     def get(self, request, review_id):
         review = get_object_or_404(Review, id=review_id)
-        return render(request, self.template_name, {"review": review})
+        cancel_url = reverse("review:review_update", kwargs={"review_id": review.id})
+        return render(request, self.template_name, {"object": review, "cancel_url": cancel_url})
 
     def post(self, request, review_id):
         review = get_object_or_404(Review, id=review_id)
