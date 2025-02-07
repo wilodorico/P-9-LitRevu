@@ -29,10 +29,15 @@ class HomeView(LoginRequiredMixin, View):
         tickets = Ticket.objects.filter(user__in=users_to_include)
         reviews = Review.objects.filter(user__in=users_to_include)
 
+        # Création d'un dictionnaire associant chaque ticket à un booléen indiquant
+        # si l'utilisateur a déjà posté une review
+        user_reviews = Review.objects.filter(user=user).values_list("ticket_id", flat=True)
+        tickets_with_reviews = {ticket.id: ticket.id in user_reviews for ticket in tickets}
+
         # Fusionner les requêtes et trier par date de création (antéchronologique)
         posts = sorted(list(tickets) + list(reviews), key=lambda post: post.time_created, reverse=True)
 
-        return render(request, self.template_name, {"posts": posts})
+        return render(request, self.template_name, {"posts": posts, "tickets_with_reviews": tickets_with_reviews})
 
 
 class TicketCreateView(LoginRequiredMixin, View):

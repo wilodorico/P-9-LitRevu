@@ -16,3 +16,8 @@ def stars_count(rating):
 def model_name(obj):
     """Retourne le nom du modèle d'un objet Django"""
     return obj.__class__.__name__.lower()
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key, False)
