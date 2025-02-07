@@ -67,7 +67,7 @@ class TicketUpdateView(LoginRequiredMixin, View):
             photo = form.save(commit=False)
             photo.user = request.user
             photo.save()
-            return redirect("review:home")
+            return redirect("review:user_posts")
 
 
 @method_decorator(ticket_owner_required, name="dispatch")
@@ -76,14 +76,14 @@ class TicketDeleteView(LoginRequiredMixin, View):
 
     def get(self, request, ticket_id):
         ticket = get_object_or_404(Ticket, id=ticket_id)
-        cancel_url = reverse("review:ticket_update", kwargs={"ticket_id": ticket.id})
+        cancel_url = reverse("review:user_posts")
         return render(request, self.template_name, {"object": ticket, "cancel_url": cancel_url})
 
     def post(self, request, ticket_id):
         ticket = get_object_or_404(Ticket, id=ticket_id)
         ticket.delete()
         messages.success(request, "Demande de critique supprimée.")
-        return redirect("review:home")
+        return redirect("review:user_posts")
 
 
 class ReviewCreateView(LoginRequiredMixin, View):
@@ -122,15 +122,16 @@ class ReviewUpdateView(LoginRequiredMixin, View):
 
     def post(self, request, review_id):
         review = get_object_or_404(Review, id=review_id)
-        form = ReviewForm(request.POST, instance=review)
+        review_form = ReviewForm(request.POST, instance=review)
         rating_input = int(request.POST.get("rating"))
-        if form.is_valid():
-            form_instance = form.save(commit=False)
+        if review_form.is_valid():
+            form_instance = review_form.save(commit=False)
             form_instance.user = request.user
             form_instance.rating = rating_input
             form_instance.save()
             messages.success(request, ("Commentaire mis à jour !"))
-            return redirect("review:home")
+            return redirect("review:user_posts")
+        return render(request, self.template_name, {"review_form": review_form, "ticket": review.ticket})
 
 
 @method_decorator(review_owner_required, name="dispatch")
@@ -139,14 +140,14 @@ class ReviewDeleteView(LoginRequiredMixin, View):
 
     def get(self, request, review_id):
         review = get_object_or_404(Review, id=review_id)
-        cancel_url = reverse("review:review_update", kwargs={"review_id": review.id})
+        cancel_url = reverse("review:user_posts")
         return render(request, self.template_name, {"object": review, "cancel_url": cancel_url})
 
     def post(self, request, review_id):
         review = get_object_or_404(Review, id=review_id)
         review.delete()
         messages.success(request, "Commentaire supprimé.")
-        return redirect("review:home")
+        return redirect("review:user_posts")
 
 
 class UserPostsView(LoginRequiredMixin, View):
