@@ -11,43 +11,42 @@
             Demander une critique
         </a>
     </div>
-
     <div class="w-full">
-        {% for ticket in tickets %}
-            {% if ticket.reviews.all %}
+        {% for post in posts %}
+            {% if post|model_name == "review" %}
                 <div class="w-full border border-gray-300 rounded-lg shadow-sm mb-5 p-5">
-
-                    {% for review in ticket.reviews.all %}
-                        <div class="flex justify-between">
-                            <div class="flex">
-                                {% if review.user == request.user %}
-                                <p class="me-5">Vous avez publié une critique</p>
-                                <a href="{% url 'review:review_update' review.id %}" title="Éditer">
-                                    <img src="{% static 'medias/edit.png' %}" alt="Icone édition" class="w-5 h-5">
-                                </a>
-                                {% else %}
-                                <p>{{ review.user }} a plublié une critique</p> 
-                                {% endif %}
-                            </div>
-                            <p class="text-xs text-gray-700">{{ ticket.time_created | date:"H:i, d F Y" }}</p>
+                    <div class="flex justify-between">
+                        <div class="flex">
+                            {% if post.user == request.user %}
+                            <p class="me-5">Vous avez publié une critique</p>
+                            <a href="{% url 'review:review_update' post.id %}" title="Éditer">
+                                <img src="{% static 'medias/edit.png' %}" alt="Icone édition" class="w-5 h-5">
+                            </a>
+                            {% else %}
+                            <p>{{ post.user }} a publié une critique</p>
+                            {% endif %}
                         </div>
-                        <h2 class="text-xl font-semibold my-5">
-                            {{ review.headline }} - 
-                            <span class="inline-flex">
-                                {% for _ in review.rating|stars_count %}
-                                <img src="{% static 'medias/star.png' %}" alt="Étoile" class="w-5 h-5">
-                                {% endfor %}
-                            </span>
-                        </h2>
-                        <p class="text-gray-700 mb-3">{{ review.body }}</p>
-                    {% endfor %}
-                    {% include 'review/includes/ticket_card.html' %}
+                        <p class="text-xs text-gray-700">{{ post.time_created | date:"H:i, d F Y" }}</p>
+                    </div>
+                    <h2 class="text-xl font-semibold my-5">
+                        {{ post.headline }} -
+                        <span class="inline-flex">
+                            {% for _ in post.rating|stars_count %}
+                            <img src="{% static 'medias/star.png' %}" alt="Étoile" class="w-5 h-5">
+                            {% endfor %}
+                        </span>
+                    </h2>
+                    <p class="text-gray-700 mb-3">{{ post.body }}</p>
+
+                    {% include 'review/includes/ticket_card.html' with ticket=post.ticket %}
                 </div>
-            {% else %}
-                {% include 'review/includes/ticket_card.html' %}
+
+            {% elif post|model_name == "ticket" %}
+                {% include 'review/includes/ticket_card.html' with ticket=post %}
             {% endif %}
+        {% empty %}
+            <p class="text-gray-500 text-center">Aucune activité récente.</p>
         {% endfor %}
     </div>
 </div>
 {% endblock content %}
-    

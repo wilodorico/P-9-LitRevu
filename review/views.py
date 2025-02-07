@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.urls import reverse
 
+from follows.models import UserFollow
 from review.forms import ReviewForm, TicketForm
 from review.models import Review, Ticket
 from review.permissions.edit_access import review_owner_required, ticket_owner_required
@@ -16,8 +17,21 @@ class HomeView(LoginRequiredMixin, View):
     template_name = "review/home.html"
 
     def get(self, request):
-        tickets = Ticket.objects.filter(user=request.user).order_by("-time_created")
-        return render(request, self.template_name, {"tickets": tickets})
+        user = request.user
+
+        # Récupérer les utilisateurs suivis
+        followed_users = UserFollow.objects.get_followings(user).values_list("followed_user", flat=True)
+
+        # Récupérer les tickets et reviews des utilisateurs suivis + utilisateur lui-même
+        users_to_include = list(followed_users) + [user]
+
+        tickets = Ticket.objects.filter(user__in=users_to_include)
+        reviews = Review.objects.filter(user__in=users_to_include)
+
+        # Fusionner les requêtes et trier par date de création (antéchronologique)
+        posts = sorted(list(tickets) + list(reviews), key=lambda post: post.time_created, reverse=True)
+
+        return render(request, self.template_name, {"posts": posts})
 
 
 class TicketCreateView(LoginRequiredMixin, View):
