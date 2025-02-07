@@ -7,14 +7,14 @@
     <h2 class="text-3xl font-bold my-10">Rechercher un utilisateur</h2>
     <div class="flex items-baseline w-full">
         <div class="relative w-full">
-            <input type="text" 
-                id="search-user" 
+            <input type="text"
+                id="search-user"
                 name="search"
                 class="w-full border border-gray-300 rounded-lg p-2.5"
                 placeholder="Rechercher un utilisateur..."
-                hx-get="{% url 'follows:search_users' %}" 
-                hx-trigger="keyup changed delay:300ms" 
-                hx-target="#search-results" 
+                hx-get="{% url 'follows:search_users' %}"
+                hx-trigger="keyup changed delay:300ms"
+                hx-target="#search-results"
                 hx-indicator=".htmx-indicator" />
 
             <div id="search-results" class="absolute w-full bg-white border border-gray-300 rounded-lg shadow-md mt-1 hidden"></div>
@@ -46,6 +46,8 @@
         <div class="border border-gray-300 rounded-lg shadow-sm p-2.5 mb-1">
             <p class="text-sm">{{ follower.user.username }}</p>
         </div>
+        {% empty %}
+        <p class="text-gray-700 text-center">Aucun abonné</p>
         {% endfor %}
     </div>
 </section>
