@@ -6,15 +6,15 @@
 {% endblock title %}
 {% block content %}
 <h1 class="text-3xl my-5">Mes Tickets et Revues</h1>
-    <div class="w-full max-w-4xl">
-      {% for post in posts %}
-          {% if post|model_name == "review" %}
-              {% include "review/includes/review_card.html" %}
-          {% elif post|model_name == "ticket" %}
-              {% include 'review/includes/ticket_card.html' with ticket=post %}
-          {% endif %}
-      {% empty %}
-          <p class="text-gray-500 text-center">Aucune activité récente.</p>
-      {% endfor %}
+  <div class="w-full max-w-3xl">
+    {% for post in posts %}
+        {% if post|model_name == "review" %}
+            {% include "review/includes/review_card.html" with is_posts_page=True %}
+        {% elif post|model_name == "ticket" %}
+            {% include 'review/includes/ticket_card.html' with ticket=post is_posts_page=True %}
+        {% endif %}
+    {% empty %}
+        <p class="text-gray-500 text-center">Aucune activité récente.</p>
+    {% endfor %}
   </div>
 {% endblock %}
