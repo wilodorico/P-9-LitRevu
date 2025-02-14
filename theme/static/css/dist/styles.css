@@ -1310,20 +1310,12 @@ input:checked + .toggle-bg {
   right: 0px;
 }
 
-.right-2 {
-  right: 0.5rem;
-}
-
 .right-3 {
   right: 0.75rem;
 }
 
 .top-0 {
   top: 0px;
-}
-
-.top-16 {
-  top: 4rem;
 }
 
 .top-3 {
@@ -1348,6 +1340,10 @@ input:checked + .toggle-bg {
 
 .z-50 {
   z-index: 50;
+}
+
+.m-1 {
+  margin: 0.25rem;
 }
 
 .-mx-1\.5 {
