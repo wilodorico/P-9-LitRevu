@@ -1,12 +1,13 @@
 from itertools import chain
 from operator import attrgetter
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views import View
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.decorators import method_decorator
+
 from django.contrib import messages
-from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views import View
 
 from follows.models import UserFollow
 from review.forms import ReviewForm, TicketForm
