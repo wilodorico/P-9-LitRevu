@@ -44,7 +44,7 @@ def follow_user(request):
     user_to_follow = get_object_or_404(User, username=username)
 
     if UserFollow.objects.filter(user=request.user, followed_user=user_to_follow).exists():
-        messages.info(request, "Vous êtes déjà abonné à cet utilisateur.")
+        messages.info(request, f"Vous êtes déjà abonné à {user_to_follow}.")
         return render(request, "follows/includes/hx_following_success.html", {"followings": followings})
 
     if request.user != user_to_follow:
