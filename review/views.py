@@ -54,7 +54,9 @@ class TicketCreateView(LoginRequiredMixin, View):
             ticket = form.save(commit=False)
             ticket.user = request.user
             ticket.save()
+            messages.success(request, "Demande de critique publiée !")
             return redirect("review:home")
+        return render(request, self.template_name, {"ticket_form": form})
 
 
 @method_decorator(ticket_owner_required, name="dispatch")
@@ -73,7 +75,9 @@ class TicketUpdateView(LoginRequiredMixin, View):
             photo = form.save(commit=False)
             photo.user = request.user
             photo.save()
+            messages.success(request, "Demande de critique mise à jour.")
             return redirect("review:user_posts")
+        return render(request, self.template_name, {"ticket_form": form})
 
 
 @method_decorator(ticket_owner_required, name="dispatch")
@@ -102,11 +106,16 @@ class ReviewCreateView(LoginRequiredMixin, View):
 
     def post(self, request, ticket_id):
         ticket = get_object_or_404(Ticket, id=ticket_id)
-        form = ReviewForm(request.POST)
-        rating_input = int(request.POST.get("rating"))
+        review_form = ReviewForm(request.POST)
+        rating_input = request.POST.get("rating")
+        if rating_input:
+            try:
+                rating_input = int(rating_input)
+            except ValueError:
+                review_form.add_error("rating", "La note doit être un nombre valide.")
 
-        if form.is_valid():
-            form_instance = form.save(commit=False)
+        if review_form.is_valid():
+            form_instance = review_form.save(commit=False)
             form_instance.user = request.user
             form_instance.ticket = ticket
             form_instance.rating = rating_input
@@ -114,7 +123,7 @@ class ReviewCreateView(LoginRequiredMixin, View):
             messages.success(request, ("Merci pour votre commentaire !"))
             return redirect("review:home")
 
-        return render(request, self.template_name, {"form": form, "ticket": ticket})
+        return render(request, self.template_name, {"review_form": review_form, "ticket": ticket})
 
 
 @method_decorator(review_owner_required, name="dispatch")
@@ -129,13 +138,19 @@ class ReviewUpdateView(LoginRequiredMixin, View):
     def post(self, request, review_id):
         review = get_object_or_404(Review, id=review_id)
         review_form = ReviewForm(request.POST, instance=review)
-        rating_input = int(request.POST.get("rating"))
+        rating_input = request.POST.get("rating")
+        if rating_input:
+            try:
+                rating_input = int(rating_input)
+            except ValueError:
+                review_form.add_error("rating", "La note doit être un nombre valide.")
+
         if review_form.is_valid():
             form_instance = review_form.save(commit=False)
             form_instance.user = request.user
             form_instance.rating = rating_input
             form_instance.save()
-            messages.success(request, ("Commentaire mis à jour !"))
+            messages.success(request, "Commentaire mis à jour !")
             return redirect("review:user_posts")
         return render(request, self.template_name, {"review_form": review_form, "ticket": review.ticket})
 
@@ -179,7 +194,13 @@ class TicketReviewCreateView(View):
     def post(self, request):
         ticket_form = TicketForm(request.POST, request.FILES)
         review_form = ReviewForm(request.POST)
-        rating_input = int(request.POST.get("rating"))
+        rating_input = request.POST.get("rating")
+        if rating_input:
+            try:
+                rating_input = int(rating_input)
+            except ValueError:
+                review_form.add_error("rating", "La note doit être un nombre valide.")
+
         if ticket_form.is_valid() and review_form.is_valid():
             with transaction.atomic():
                 ticket = ticket_form.save(commit=False)
