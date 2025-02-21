@@ -2,28 +2,31 @@
 {% load static %}
 {% load custom_filters %}
 {% block title %}
-    | Flux
+  | Flux
 {% endblock title %}
 {% block content %}
-<div class="w-full max-w-3xl flex flex-col items-center my-10">
+  <div class="w-full max-w-3xl flex flex-col items-center my-10">
+    <h1 class="sr-only">Flux d'activités LitRevu</h1>
     <div class="w-full flex justify-around mb-5 px-5">
-        <a href="{% url 'review:ticket_create' %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-            Demander une critique
-        </a>
-        <a href="{% url 'review:ticket_review_create' %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-          Créer une critique
+      <a href="{% url 'review:ticket_create' %}"
+         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+        Demander une critique
+      </a>
+      <a href="{% url 'review:ticket_review_create' %}"
+         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+        Créer une critique
       </a>
     </div>
     <div class="w-full">
-        {% for post in posts %}
-            {% if post|model_name == "review" %}
-                {% include "review/includes/review_card.html" %}
-            {% elif post|model_name == "ticket" %}
-                {% include 'review/includes/ticket_card.html' with ticket=post %}
-            {% endif %}
-        {% empty %}
-            <p class="text-gray-500 text-center">Aucune activité récente.</p>
-        {% endfor %}
+      {% for post in posts %}
+        {% if post|model_name == "review" %}
+          {% include "review/includes/review_card.html" %}
+        {% elif post|model_name == "ticket" %}
+          {% include "review/includes/ticket_card.html" with ticket=post %}
+        {% endif %}
+      {% empty %}
+        <p class="text-gray-500 text-center">Aucune activité récente.</p>
+      {% endfor %}
     </div>
-</div>
+  </div>
 {% endblock content %}
