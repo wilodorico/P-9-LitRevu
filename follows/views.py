@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views import View
 
@@ -38,10 +38,18 @@ def follow_user(request):
     username = request.POST.get("username")
 
     if not username:
-        messages.info(request, "Veuillez saisir un nom d'utilisateur.")
+        messages.error(request, "Veuillez saisir un nom d'utilisateur.")
         return render(request, "follows/includes/hx_following_success.html", {"followings": followings})
 
-    user_to_follow = get_object_or_404(User, username=username)
+    try:
+        user_to_follow = get_object_or_404(User, username=username)
+    except Http404:
+        messages.error(request, "Utilisateur non trouvé.")
+        return render(
+            request,
+            "follows/includes/hx_following_success.html",
+            {"followings": followings},
+        )
 
     if UserFollow.objects.filter(user=request.user, followed_user=user_to_follow).exists():
         messages.info(request, f"Vous êtes déjà abonné à {user_to_follow}.")
@@ -60,4 +68,14 @@ def search_users(request):
         return HttpResponse("")
 
     users = User.objects.filter(username__icontains=query).exclude(id=request.user.id)
+
+    if not users.exists():
+        error_message = "Aucun utilisateur trouvé."
+        messages.error(request, error_message)
+        return render(
+            request,
+            "follows/includes/hx-search_result_refresh.html",
+            {"users": users, "error": error_message},
+        )
+
     return render(request, "follows/includes/search_results.html", {"users": users})

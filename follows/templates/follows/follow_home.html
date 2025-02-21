@@ -3,23 +3,28 @@
   | Abonnements
 {% endblock title %}
 {% block content %}
-  <section class="w-full max-w-[700px] flex flex-col items-center mt-10">
-    <h2 class="text-3xl font-bold my-10">Rechercher un utilisateur</h2>
+  <section class="w-full max-w-2xl flex flex-col items-center mt-10">
+    <h1 class="text-3xl font-bold my-5">Suivre d'autres utilisateurs</h1>
     <div class="flex items-baseline w-full">
       <div class="relative w-full">
+        <label for="search-user" class="sr-only">Rechercher un utilisateur</label>
         <input type="text"
                id="search-user"
                name="search"
                class="w-full border border-gray-300 rounded-lg p-2.5"
                placeholder="Rechercher un utilisateur..."
+               aria-autocomplete="list"
+               aria-controls="search-results"
                hx-get="{% url 'follows:search_users' %}"
                hx-trigger="keyup changed delay:300ms"
                hx-target="#search-results"
                hx-indicator=".htmx-indicator" />
         <div id="search-results"
-             class="absolute w-full bg-white border border-gray-300 rounded-lg shadow-md mt-1 hidden"></div>
+             class="absolute w-full bg-white border border-gray-300 rounded-lg shadow-md mt-1 hidden"
+             role="listbox"
+             aria-label="Résultats de recherche"></div>
         <div class="htmx-indicator absolute right-3 top-3 hidden">
-          <span class="loader"></span> <!-- Loader à styliser -->
+          <span class="loader"></span>
         </div>
       </div>
       <button id="follow-button"
@@ -30,12 +35,12 @@
               hx-vals='js:{"username": document.getElementById("search-user").value}'>Envoyer</button>
     </div>
   </section>
-  <section class="w-full max-w-[700px] flex flex-col items-center mt-10">
-    <h2 class="text-3xl font-bold my-10">Abonnements</h2>
-    {% include 'follows/includes/hx_following_list.html' %}
+  <section class="w-full max-w-2xl flex flex-col items-center mt-10">
+    <h2 class="text-2xl font-bold my-10">Abonnements</h2>
+    {% include "follows/includes/hx_following_list.html" %}
   </section>
-  <section class="w-full max-w-[700px] flex flex-col items-center mt-10">
-    <h2 class="text-3xl font-bold my-10">Abonnés</h2>
+  <section class="w-full max-w-2xl flex flex-col items-center mt-10">
+    <h2 class="text-2xl font-bold my-10">Abonnés</h2>
     <div class="w-full">
       {% for follower in followers %}
         <div class="border border-gray-300 rounded-lg shadow-sm p-2.5 mb-1">
@@ -50,7 +55,6 @@
     function selectUser(username) {
         document.getElementById("search-user").value = username;
         document.getElementById("search-results").classList.add("hidden");
-        document.getElementById("follow-button").classList.remove("hidden");
     }
 
     document.getElementById("search-user").addEventListener("focus", function() {
