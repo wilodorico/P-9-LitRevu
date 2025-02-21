@@ -1,9 +1,9 @@
-from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views import View
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import get_user_model
-from django.contrib import messages
 
 from follows.models import UserFollow
 
@@ -30,7 +30,7 @@ class UnFollowHtmxView(LoginRequiredMixin, View):
         followings = UserFollow.objects.filter(user=request.user)
         messages.success(request, "Vous n'êtes plus abonné à cet utilisateur.")
 
-        return render(request, "follows/includes/following_list.html", {"followings": followings})
+        return render(request, "follows/includes/hx_following_success.html", {"followings": followings})
 
 
 def follow_user(request):
@@ -38,20 +38,28 @@ def follow_user(request):
     username = request.POST.get("username")
 
     if not username:
-        messages.info(request, "Veuillez saisir un nom d'utilisateur.")
-        return render(request, "follows/includes/following_list.html", {"followings": followings})
+        messages.error(request, "Veuillez saisir un nom d'utilisateur.")
+        return render(request, "follows/includes/hx_following_success.html", {"followings": followings})
 
-    user_to_follow = get_object_or_404(User, username=username)
+    try:
+        user_to_follow = get_object_or_404(User, username=username)
+    except Http404:
+        messages.error(request, "Utilisateur non trouvé.")
+        return render(
+            request,
+            "follows/includes/hx_following_success.html",
+            {"followings": followings},
+        )
 
     if UserFollow.objects.filter(user=request.user, followed_user=user_to_follow).exists():
-        messages.info(request, "Vous êtes déjà abonné à cet utilisateur.")
-        return render(request, "follows/includes/following_list.html", {"followings": followings})
+        messages.info(request, f"Vous êtes déjà abonné à {user_to_follow}.")
+        return render(request, "follows/includes/hx_following_success.html", {"followings": followings})
 
     if request.user != user_to_follow:
         UserFollow.objects.get_or_create(user=request.user, followed_user=user_to_follow)
         messages.success(request, "Vous êtes maintenant abonné à cet utilisateur.")
 
-    return render(request, "follows/includes/following_list.html", {"followings": followings})
+    return render(request, "follows/includes/hx_following_success.html", {"followings": followings})
 
 
 def search_users(request):
@@ -59,5 +67,15 @@ def search_users(request):
     if not query:
         return HttpResponse("")
 
-    users = User.objects.filter(username__icontains=query)[:5]
+    users = User.objects.filter(username__icontains=query).exclude(id=request.user.id)
+
+    if not users.exists():
+        error_message = "Aucun utilisateur trouvé."
+        messages.error(request, error_message)
+        return render(
+            request,
+            "follows/includes/hx-search_result_refresh.html",
+            {"users": users, "error": error_message},
+        )
+
     return render(request, "follows/includes/search_results.html", {"users": users})
