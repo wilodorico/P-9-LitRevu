@@ -1,23 +1,26 @@
 {% extends "base.html" %}
 {% block title %}
-    | Formulaire
+  | Créer une critique
 {% endblock title %}
 {% block content %}
-<h1 class="text-xl font-semibold my-4">Créer une critique</h1>
-<div class="w-full max-w-3xl flex flex-col items-center border-2 border-gray-300 rounded-t-lg p-4">
-    <div class="w-full max-w-[700px]">
-        <h2 class="text-left">En réponse à</h2>
-        {% include 'review/includes/ticket_card.html' with ticket=ticket %}
+  <h1 class="text-xl font-semibold my-4">Créer une critique</h1>
+  <div class="w-full max-w-3xl flex flex-col items-center border-2 border-gray-300 rounded-t-lg p-4">
+    <div class="w-full">
+      <h2 class="text-left">En réponse à</h2>
+      {% include "review/includes/ticket_card.html" with ticket=ticket %}
     </div>
-</div>
-<section class="w-full max-w-3xl flex flex-col items-center border-2 border-gray-300 rounded-b-lg border-t-0 p-4 mb-10">
+  </div>
+  <section class="w-full max-w-3xl flex flex-col items-center border-2 border-gray-300 rounded-b-lg border-t-0 p-4 mb-10">
     <h2 class="mb-3">Critique</h2>
     <form method="post" class="w-full">
-        {% csrf_token %}
-        {% include "review/includes/review_inputs.html" %}
-        <div class="mt-5 text-right">
-          <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Envoyer</button>
-        </div>
+      {% csrf_token %}
+      {% include "review/includes/review_inputs.html" %}
+      <div class="mt-5 text-right">
+        <button type="submit"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+          Envoyer
+        </button>
+      </div>
     </form>
-</section>
+  </section>
 {% endblock content %}

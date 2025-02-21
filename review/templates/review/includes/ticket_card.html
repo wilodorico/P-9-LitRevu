@@ -14,8 +14,8 @@
   <div class="flex justify-between">
     <img src="{% if ticket.image %}{{ ticket.image.url }}{% else %}{% static 'medias/no-image.jpg' %}{% endif %}"
          alt="Image concernant la demande de critique {{ ticket.title }}"
-         class="border border-gray-300 h-[200px] object-cover"
-         width="150"
+         class="border border-gray-300 w-[160px] h-[200px] object-cover"
+         width="160"
          height="200">
     {% if not tickets_with_reviews|get_item:ticket.id %}
       <a href="{% url 'review:review_create' ticket.id %}"

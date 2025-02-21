@@ -1,40 +1,57 @@
 <div class="mb-5">
-  <label for="{{ review_form.headline.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ review_form.headline.label }}</label>
-  <input
-      type="text"
-      id="{{ review_form.headline.id_for_label}}"
-      name="{{ review_form.headline.html_name }}"
-      value="{% if review_form.headline.value %}{{review_form.headline.value}}{% endif %}"
-      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-  />
-  {{ review_form.headline.errors }}
+  <label for="{{ review_form.headline.id_for_label }}"
+         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ review_form.headline.label }}</label>
+  <input type="text"
+         id="{{ review_form.headline.id_for_label }}"
+         name="{{ review_form.headline.html_name }}"
+         value="{% if review_form.headline.value %}{{ review_form.headline.value }}{% endif %}"
+         aria-required="true"
+         aria-describedby="{% if review_form.headline.errors %}{{ review_form.headline.id_for_label }}-error{% endif %}"
+         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+  {% if review_form.headline.errors %}
+    <span id="{{ review_form.headline.id_for_label }}-error"
+          class="text-red-600 text-md"
+          role="alert">{{ review_form.headline.errors.0 }}</span>
+  {% endif %}
 </div>
-<div class="">
-  <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ review_form.rating.label }}</p>
+<fieldset class="mb-5">
+  <legend class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ review_form.rating.label }}</legend>
   <div class="flex">
-      {% for i in "012345" %}
-          {% with i|add:"0" as i_int %} {# Convertit i en entier #}
-              <div class="flex items-center me-4">
-                  <input id="rating-inline-radio-{{ i_int }}" type="radio" value="{{ i_int }}"
-                      name="{{ review_form.rating.name }}"
-                      class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                      {% if review_form.rating.value == i_int %}checked{% endif %}>
-                  <label for="rating-inline-radio-{{ i_int }}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ i_int }}</label>
-              </div>
-          {% endwith %}
-      {% endfor %}
+    {% for i in "012345" %}
+      {% with i|add:"0" as i_int %}
+        <div class="flex items-center me-4">
+          <input id="rating-inline-radio-{{ i_int }}"
+                 type="radio"
+                 value="{{ i_int }}"
+                 name="{{ review_form.rating.name }}"
+                 aria-required="true"
+                 aria-describedby="{% if review_form.rating.errors %}{{ review_form.rating.id_for_label }}-error{% endif %}"
+                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                 {% if review_form.rating.value == i_int %}checked{% endif %}>
+          <label for="rating-inline-radio-{{ i_int }}"
+                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ i_int }}</label>
+        </div>
+      {% endwith %}
+    {% endfor %}
   </div>
-  {{ review_form.rating.errors }}
-</div>
+  {% if review_form.rating.errors %}
+    <span id="{{ review_form.rating.id_for_label }}-error"
+          class="text-red-600 text-md"
+          role="alert">{{ review_form.rating.errors.0 }}</span>
+  {% endif %}
+</fieldset>
 <div class="my-5">
-  <label for="{{ review_form.body.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ review_form.body.label }}</label>
-  <textarea
-      id="{{ review_form.body.id_for_label}}"
-      name="{{ review_form.body.html_name }}"
-      rows="4"
-      class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      placeholder="Écrivez la critique ici..."
-  >{% if review_form.instance.body %}{{review_form.instance.body}}{% endif %}</textarea>
-  {{ review_form.body.errors }}
+  <label for="{{ review_form.body.id_for_label }}"
+         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ review_form.body.label }}</label>
+  <textarea id="{{ review_form.body.id_for_label}}"
+            name="{{ review_form.body.html_name }}"
+            rows="4"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Écrivez la critique ici..."
+            aria-describedby="{% if review_form.body.errors %}{{ review_form.body.id_for_label }}-error{% endif %}">{% if review_form.instance.body %}{{review_form.instance.body}}{% endif %}</textarea>
+  {% if review_form.body.errors %}
+    <span id="{{ review_form.body.id_for_label }}-error"
+          class="text-red-600 text-md"
+          role="alert">{{ review_form.body.errors.0 }}</span>
+  {% endif %}
 </div>
-

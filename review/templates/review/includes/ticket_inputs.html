@@ -1,39 +1,58 @@
 <div class="mb-5">
-  <label for="{{ ticket_form.title.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ ticket_form.title.label }}</label>
-  <input
-      type="text"
-      id="{{ ticket_form.title.id_for_label}}"
-      name="{{ ticket_form.title.html_name }}"
-      value="{% if ticket_form.title.value %}{{ticket_form.title.value}}{% endif %}"
-      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-  />
-  {{ ticket_form.title.errors }}
+  <label for="{{ ticket_form.title.id_for_label }}"
+         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ ticket_form.title.label }}</label>
+  <input type="text"
+         id="{{ ticket_form.title.id_for_label }}"
+         name="{{ ticket_form.title.html_name }}"
+         value="{% if ticket_form.title.value %}{{ ticket_form.title.value }}{% endif %}"
+         aria-required="true"
+         aria-describedby="{% if ticket_form.title.errors %}{{ ticket_form.title.id_for_label }}-error{% endif %}"
+         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+  {% if ticket_form.title.errors %}
+    <span id="{{ ticket_form.title.id_for_label }}-error"
+          class="text-red-600 text-md"
+          role="alert">{{ ticket_form.title.errors.0 }}</span>
+  {% endif %}
 </div>
 <div class="mb-5">
-  <label for="{{ ticket_form.description.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ ticket_form.description.label }}</label>
-  <textarea
-      id="{{ ticket_form.description.id_for_label}}"
-      name="{{ ticket_form.description.html_name }}"
-      rows="4"
-      class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      placeholder="Écrivez la description du ticket ici..."
-  >{% if ticket_form.instance.description %}{{ticket_form.instance.description}}{% endif %}</textarea>
-  {{ ticket_form.description.errors }}
+  <label for="{{ ticket_form.description.id_for_label }}"
+         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+    {{ ticket_form.description.label }}
+  </label>
+  <textarea id="{{ ticket_form.description.id_for_label}}"
+            name="{{ ticket_form.description.html_name }}"
+            rows="4"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Écrivez la description du ticket ici..."
+            aria-describedby="{% if ticket_form.description.errors %}{{ ticket_form.description.id_for_label }}-error{% endif %}">{% if ticket_form.instance.description %}{{ticket_form.instance.description}}{% endif %}</textarea>
+  {% if ticket_form.description.errors %}
+    <span id="{{ ticket_form.description.id_for_label }}-error"
+          class="text-red-600 text-md"
+          role="alert">{{ ticket_form.description.errors.0 }}</span>
+  {% endif %}
 </div>
 <div class="mb-5">
   {% if ticket_form.instance.image %}
-  <div class="mb-5">
+    <div class="mb-5">
       <p>Image actuelle :</p>
-      <img src="{{ ticket_form.instance.image.url }}" alt="Image du ticket" class="border border-gray-300 h-[200px] object-contain" width="150" height="400">
-  </div>
+      <img src="{{ ticket_form.instance.image.url }}"
+           alt="Image actuelle de la demande de critique {{ ticket_form.instance.title }}"
+           class="border border-gray-300 w-[160px] h-[200px] object-cover"
+           width="160"
+           height="200">
+    </div>
   {% endif %}
-  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ ticket_form.image.id_for_label }}">{{ ticket_form.image.label }}</label>
-  <input
-      id="{{ ticket_form.image.id_for_label }}"
-      name="{{ ticket_form.image.html_name }}"
-      value="{% if ticket_form.image.value %}{{ticket_form.image.value}}{% endif %}"
-      type="file"
-      class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-  >
-  {{ ticket_form.image.errors }}
+  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+         for="{{ ticket_form.image.id_for_label }}">{{ ticket_form.image.label }}</label>
+  <input id="{{ ticket_form.image.id_for_label }}"
+         name="{{ ticket_form.image.html_name }}"
+         value="{% if ticket_form.image.value %}{{ ticket_form.image.value }}{% endif %}"
+         type="file"
+         class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+         aria-describedby="{% if ticket_form.image.errors %}{{ ticket_form.image.id_for_label }}-error{% endif %}" />
+  {% if ticket_form.image.errors %}
+    <span id="{{ ticket_form.image.id_for_label }}-error"
+          class="text-red-600 text-md"
+          role="alert">{{ ticket_form.image.errors.0 }}</span>
+  {% endif %}
 </div>
