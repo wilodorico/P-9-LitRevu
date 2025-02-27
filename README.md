@@ -30,7 +30,7 @@ LITRevu est une application web permettant aux utilisateurs de demander et publi
 1. **Cloner le dépôt GitHub**
 ```bash
 git clone https://github.com/wilodorico/P-9-LitRevu.git
-cd LITRevu
+cd P-9-LitRevu
 ```
 
 2. **Créer et activer l'environnement virtuel**
