@@ -37,7 +37,7 @@ cd LITRevu
 ```bash
 python -m venv venv
 source venv/bin/activate # Sur macOS/Linux
-env\Scripts\activate # Sur Windows
+venv\Scripts\activate # Sur Windows
 ```
 
 3. **Installer les dépendances**
