@@ -18,9 +18,7 @@ LITRevu est une application web permettant aux utilisateurs de demander et publi
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000)](#)
 [![HTMX](https://img.shields.io/badge/HTMX-36C?logo=htmx&logoColor=fff)](#)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind%20CSS-%2338B2AC.svg?logo=tailwind-css&logoColor=white)](#)
-![Flowbite](https://img.shields.io/badge/Flowbite-UIcomponents-%2338BDF8?logo=https://flowbite.com/images/logo.svg)
-
-
+[![Flowbite](https://img.shields.io/badge/Flowbite-UIcomponents-%2338BDF8?logo=https://flowbite.com/images/logo.svg)](#)
 
 ## 🛠️ Prérequis
 - Python 3.10+
@@ -60,8 +58,18 @@ python manage.py runserver
 L'application sera accessible à l'adresse : `http://localhost:8000`
 
 ## 🔑 Accès aux données de test
-- **Nom d'utilisateur** : `testuser`
-- **Mot de passe** : `testpassword`
+1. Admin (Pour accéder au site d'administration)
+- **Nom d'utilisateur** : `admin`
+- **Mot de passe** : `admin`
+2. Marie
+- **Nom d'utilisateur** : `marie`
+- **Mot de passe** : `marie12345`
+3. Jack
+- **Nom d'utilisateur** : `jack`
+- **Mot de passe** : `jack12345`
+4. Joe
+- **Nom d'utilisateur** : `joe`
+- **Mot de passe** : `joe12345`
 
 ## 💡 Utilisation
 - Accédez à la page d'accueil pour vous connecter ou vous inscrire.
