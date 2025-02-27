@@ -1,8 +1,8 @@
-from django.shortcuts import redirect, render
-from django.views import View
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
+from django.views import View
 
 from accounts.decorators import user_not_authenticated
 from accounts.forms import LoginForm, SignupForm
@@ -20,6 +20,7 @@ class SignupView(View):
         form = SignupForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, ("Votre compte a été créé."))
             return redirect("accounts:login")
         else:
             return render(request, self.template_name, {"form": form})
