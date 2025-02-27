@@ -1,0 +1,38 @@
+# Indique que ce fichier est la configuration principale
+root = true
+
+# Configuration générale pour tous les fichiers
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Configuration pour les fichiers Python
+[*.py]
+max_line_length = 119
+indent_size = 4
+
+# Configuration pour les fichiers HTML, Django Templates et CSS/JS
+[*.{html,htm,tmpl,django}]
+indent_style = space
+indent_size = 2
+max_line_length = 119
+trim_trailing_whitespace = true
+
+# Configuration pour les fichiers JavaScript et JSON
+[*.{js,json}]
+indent_style = space
+indent_size = 2
+
+# Configuration pour les fichiers YAML (ex: fichiers de config Django)
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# Configuration spécifique pour les fichiers Markdown
+[*.md]
+trim_trailing_whitespace = false
+insert_final_newline = true
