@@ -21,21 +21,21 @@ class HomeView(LoginRequiredMixin, View):
     def get(self, request):
         user = request.user
 
-        # Récupérer les utilisateurs suivis
+        # Retrieve followed users
         followed_users = UserFollow.objects.get_followings(user).values_list("followed_user", flat=True)
 
-        # Récupérer les tickets et reviews des utilisateurs suivis + utilisateur lui-même
+        # Retrieve tickets and reviews from followed users + the user himself
         users_to_include = list(followed_users) + [user]
 
         tickets = Ticket.objects.filter(user__in=users_to_include)
         reviews = Review.objects.filter(user__in=users_to_include)
 
-        # Création d'un dictionnaire associant chaque ticket à un booléen indiquant
-        # si l'utilisateur a déjà posté une review
+        # Create a dictionary associating each ticket with a boolean indicating
+        # whether the user has already posted a review
         user_reviews = Review.objects.filter(user=user).values_list("ticket_id", flat=True)
         tickets_with_reviews = {ticket.id: ticket.id in user_reviews for ticket in tickets}
 
-        # Fusionner les requêtes et trier par date de création (antéchronologique)
+        # Merge the queries and sort by creation date (reverse chronological order)
         posts = sorted(list(tickets) + list(reviews), key=lambda post: post.time_created, reverse=True)
 
         return render(request, self.template_name, {"posts": posts, "tickets_with_reviews": tickets_with_reviews})
@@ -183,7 +183,7 @@ class UserPostsView(LoginRequiredMixin, View):
         return render(request, self.template_name, {"posts": sorted_posts})
 
 
-class TicketReviewCreateView(View):
+class TicketReviewCreateView(LoginRequiredMixin, View):
     template_name = "review/ticket_review_form.html"
 
     def get(self, request):
