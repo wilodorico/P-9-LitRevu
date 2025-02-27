@@ -1,13 +1,14 @@
 from functools import wraps
-from django.shortcuts import get_object_or_404
+
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404
 
 from review.models import Review, Ticket
 
 
 def _is_ticket_owner(user, ticket_id):
     """
-    Vérifie si l'utilisateur est le propriétaire du ticket.
+    Checks if the user is the owner of the ticket.
     """
     ticket = get_object_or_404(Ticket, pk=ticket_id)
     return user.is_authenticated and ticket.user == user
@@ -26,7 +27,7 @@ def ticket_owner_required(view_func):
 
 def _is_review_owner(user, review_id):
     """
-    Vérifie si l'utilisateur est le propriétaire de la review.
+    Checks if the user is the owner of the review.
     """
     review = get_object_or_404(Review, pk=review_id)
     return user.is_authenticated and review.user == user
@@ -40,4 +41,5 @@ def review_owner_required(view_func):
             raise PermissionDenied("Vous n'êtes pas autorisé à accéder à cette page.")
         return view_func(request, *args, **kwargs)
 
+    return _wrapped_view
     return _wrapped_view
